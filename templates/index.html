@@ -5,18 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
     <title>Url Shortener</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
   </head>
   <body>
     <div class="login">
         <h1>Url Shortener</h1>
-          <form method="post">
-            <input type="text" name="u" placeholder="Enter Url" required="required"/>
+          <form id="post-form">
+            {% csrf_token %}
+            <input type="text" id="link" name="link" placeholder="Enter Url here" required="required"/>
             <button type="submit" class="btn btn-primary btn-block btn-large">Shorten</button>
-            <input type="text" name="p" placeholder="Shortened Url"/>
           </form>
+            
+          
+        <section id="section"><h2></h2></section>
+       
       </div>
-	<script src="index.js"></script>
-  </body>
+    </body>
+
+	<script type="text/javascript">
+        $(document).on('submit','#post-form',function(e){
+           e.preventDefault();
+
+           $.ajax({
+              type:'POST',
+              url:'/create',
+              data:{
+              link:$('#link').val(),
+              csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+              
+              },
+              success: function(data){
+                $('h2').html("localhost:8000/"+data)
+              }
+            });
+        });
+        
+    </script>
+  
 </html>
